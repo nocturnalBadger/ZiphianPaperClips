@@ -9,10 +9,10 @@ class PaperClipChain:
         
         
 def makeABunchOfPaperClips(allChains):
-    ammountOfChainsToMake = 100
+    ammountOfChainsToMake = 1000
     
     while len(allChains) < ammountOfChainsToMake:
-        allChains.append(PaperClipChain)
+        allChains.append(PaperClipChain())
     return allChains
         
 def chooseChainsToAdd(allChains):
@@ -21,26 +21,39 @@ def chooseChainsToAdd(allChains):
         i = 0
         while i < chain.numberOfLinks:
             expandedPileOfChains.append(chain)
+            i += 1
             
-    indexOfFirstLink = random.randint(0, len(expandedPileOfChains))
-    firstChain = expandedPileOfChains[indexOfFirstLink]
+    print "There are %i paperclips." % len(expandedPileOfChains)
+    indexOfFirstChain = random.randint(0, len(expandedPileOfChains) - 1)
+    firstChain = expandedPileOfChains[indexOfFirstChain]
     
-    indexOfSecondLink = random.randint(-1, (len(expandedPileOfChains) + 1))
-    secondLink = expandedPileOfChains[indexOfSecondLink]
+    secondChain = firstChain
+    while firstChain == secondChain:
+        indexOfSecondChain = random.randint(0, len(expandedPileOfChains) - 1)
+        secondChain = expandedPileOfChains[indexOfSecondChain]
     
-    return (firstLink, secondLink)
+    return (firstChain, secondChain)
 def printChainLengths(pileOfChains):
+    print "There are a total of %i chains" % len(pileOfChains)
     for chain in pileOfChains:
-        print len(chain) + "\n"
+        print chain.numberOfLinks
 
 pileOfChains = makeABunchOfPaperClips([])
-operationsToComplete = 1
+operationsToComplete = 980
 operationsCompleted = 0
 
-while operationsCompleted < operationsToComplete:
+while operationsCompleted < operationsToComplete and len(pileOfChains) > 1:
     chainsToAdd = chooseChainsToAdd(pileOfChains)
-    chainsToAdd[0].linkWithOtherChain(chainsToAdd[1])
+    chainsToAdd[0].numberOfLinks += chainsToAdd[1].numberOfLinks
     pileOfChains.remove(chainsToAdd[1])
     operationsCompleted += 1
     
+print "Preformed %i operations" % operationsCompleted
 printChainLengths(pileOfChains)
+
+
+
+
+
+
+
