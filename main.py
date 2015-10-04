@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 class PaperClipChain:
     
@@ -23,7 +24,7 @@ def chooseChainsToAdd(allChains):
             expandedPileOfChains.append(chain)
             i += 1
             
-    print "There are %i paperclips." % len(expandedPileOfChains)
+    #print "There are %i paperclips." % len(expandedPileOfChains)
     indexOfFirstChain = random.randint(0, len(expandedPileOfChains) - 1)
     firstChain = expandedPileOfChains[indexOfFirstChain]
     
@@ -33,13 +34,26 @@ def chooseChainsToAdd(allChains):
         secondChain = expandedPileOfChains[indexOfSecondChain]
     
     return (firstChain, secondChain)
+
 def printChainLengths(pileOfChains):
-    print "There are a total of %i chains" % len(pileOfChains)
+    #print "There are a total of %i chains" % len(pileOfChains)
     for chain in pileOfChains:
         print chain.numberOfLinks
 
+def makeGraph(listOfChainLengths):
+    xSeries = [1]
+    while len(xSeries) < len(listOfChainLengths):
+        xSeries.append(len(xSeries))
+    plt.figure()
+    #plt.xlim(xmax = len(listOfChainLengths) / 4)
+    plt.plot(xSeries, listOfChainLengths, ".")
+    plt.savefig("results.png")
+
+
+
+# Main Stuff
 pileOfChains = makeABunchOfPaperClips([])
-operationsToComplete = 980
+operationsToComplete = 500
 operationsCompleted = 0
 
 while operationsCompleted < operationsToComplete and len(pileOfChains) > 1:
@@ -48,8 +62,12 @@ while operationsCompleted < operationsToComplete and len(pileOfChains) > 1:
     pileOfChains.remove(chainsToAdd[1])
     operationsCompleted += 1
     
-print "Preformed %i operations" % operationsCompleted
-printChainLengths(pileOfChains)
+sortedListOfChainLengths = sorted([chain.numberOfLinks for chain in pileOfChains])[::-1]
+makeGraph(sortedListOfChainLengths)
+
+
+#print "Preformed %i operations" % operationsCompleted
+#printChainLengths(pileOfChains)
 
 
 
