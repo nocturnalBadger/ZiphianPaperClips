@@ -1,5 +1,9 @@
 import random
 import matplotlib.pyplot as plt
+import numpy
+
+totalPaperClips = 1000
+operationsToComplete = 300
 
 class PaperClipChain:
     
@@ -10,9 +14,9 @@ class PaperClipChain:
         
         
 def makeABunchOfPaperClips(allChains):
-    ammountOfChainsToMake = 1000
+    global totalPaperClips
     
-    while len(allChains) < ammountOfChainsToMake:
+    while len(allChains) < totalPaperClips:
         allChains.append(PaperClipChain())
     return allChains
         
@@ -35,25 +39,28 @@ def chooseChainsToAdd(allChains):
     
     return (firstChain, secondChain)
 
-def printChainLengths(pileOfChains):
-    #print "There are a total of %i chains" % len(pileOfChains)
-    for chain in pileOfChains:
-        print chain.numberOfLinks
-
 def makeGraph(listOfChainLengths):
-    xSeries = [1]
-    while len(xSeries) < len(listOfChainLengths):
-        xSeries.append(len(xSeries))
+    global operationsToComplete, totalPaperClips
+    xSeries = numpy.linspace(0, 1, len(listOfChainLengths))
     plt.figure()
-    #plt.xlim(xmax = len(listOfChainLengths) / 4)
+    plt.xlim(xmin = 0)
     plt.plot(xSeries, listOfChainLengths, ".")
+    
+    z = numpy.polyfit(xSeries, listOfChainLengths, 2)
+    p = numpy.poly1d(z)
+    plt.plot(xSeries, p(xSeries), "r-")
+    
+    # Visual
+    plt.xlabel("Chain #")
+    plt.ylabel("Chain Length")
+    title = "Chain lengths after %i iterations over a pile of %i paperclips" % (operationsToComplete, totalPaperClips)
+    plt.suptitle(title)
     plt.savefig("results.png")
 
 
 
 # Main Stuff
 pileOfChains = makeABunchOfPaperClips([])
-operationsToComplete = 500
 operationsCompleted = 0
 
 while operationsCompleted < operationsToComplete and len(pileOfChains) > 1:
@@ -64,10 +71,6 @@ while operationsCompleted < operationsToComplete and len(pileOfChains) > 1:
     
 sortedListOfChainLengths = sorted([chain.numberOfLinks for chain in pileOfChains])[::-1]
 makeGraph(sortedListOfChainLengths)
-
-
-#print "Preformed %i operations" % operationsCompleted
-#printChainLengths(pileOfChains)
 
 
 
